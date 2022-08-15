@@ -88,7 +88,7 @@ class Calculator {
       this.prevOperandText.innerText = `${this.getDisplayNumber(this.prevOperand)} ${this.operation}`;
     }
     else {
-      this.prevOperandText.innerText = this.getDisplayNumber(this.prevOperand);
+      this.prevOperandText.innerText = '';
     }
   }
 }
