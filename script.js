@@ -61,9 +61,35 @@ class Calculator {
     this.prevOperand = '';
   }
 
+  getDisplayNumber(number) {
+    const stringNumber = number.toString();
+    const integerNumber = parseFloat(stringNumber.split('.')[0]);
+    const decimalNumber = stringNumber.split('.')[1];
+
+    let integerDisplay;
+    if(isNaN(integerNumber)) {
+      integerDisplay = '';
+    }
+    else {
+      integerDisplay = integerNumber.toLocaleString('en', {maximumFractionDigits: 0});
+    }
+
+    if(decimalNumber != null) {
+      return `${integerDisplay}.${decimalNumber}`;
+    }
+    else {
+      return integerDisplay;
+    }
+  }
+
   updateDisplay() {
-    this.currentOperandText.innerText = this.currentOperand;
-    this.prevOperandText.innerText = this.prevOperand;
+    this.currentOperandText.innerText = this.getDisplayNumber(this.currentOperand);
+    if(this.operation != null) {
+      this.prevOperandText.innerText = `${this.getDisplayNumber(this.prevOperand)} ${this.operation}`;
+    }
+    else {
+      this.prevOperandText.innerText = this.getDisplayNumber(this.prevOperand);
+    }
   }
 }
 
@@ -76,7 +102,9 @@ const deleteButton = document.querySelector('[data-delete]');
 const prevOperandText = document.querySelector('[data-prev-operand]');
 const currentOperandText = document.querySelector('[data-current-operand]');
 
+
 const calculator = new Calculator(prevOperandText, currentOperandText);
+
 
 numberButton.forEach(button => {
   button.addEventListener('click', () => {
@@ -85,6 +113,7 @@ numberButton.forEach(button => {
   });
 });
 
+
 operationButton.forEach(button => {
   button.addEventListener('click', () => {
     calculator.chooseOperation(button.innerText);
@@ -92,15 +121,18 @@ operationButton.forEach(button => {
   });
 });
 
+
 equalsButton.addEventListener('click', button => {
   calculator.compute();
   calculator.updateDisplay();
 });
 
+
 clearButton.addEventListener('click', button => {
   calculator.clear();
   calculator.updateDisplay();
 });
+
 
 deleteButton.addEventListener('click', button => {
   calculator.delete();
