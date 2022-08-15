@@ -16,13 +16,20 @@ class Calculator {
   }
 
   appendNumber(number) {
-    if(number === '.' && this.currentOperand.includes('.')) return;
+    if(number === '.' && this.currentOperand.includes('.')) return; // Prevent user from adding more than 1 '.'
 
     this.currentOperand = this.currentOperand.toString() + number.toString(); //Append numbers, don't add them together
   }
 
   chooseOperation(operation) {
+    if(this.currentOperand === '') return; // Prevent user from entering more operations before numbers
+    if(this.prevOperand != '') {
+      this.compute();
+    }
 
+    this.operation = operation;
+    this.prevOperand = this.currentOperand;
+    this.currentOperand = '';
   }
 
   compute() {
@@ -31,6 +38,7 @@ class Calculator {
 
   updateDisplay() {
     this.currentOperandText.innerText = this.currentOperand;
+    this.prevOperandText.innerText = this.prevOperand;
   }
 }
 
@@ -50,4 +58,16 @@ numberButton.forEach(button => {
     calculator.appendNumber(button.innerText);
     calculator.updateDisplay();
   });
+});
+
+operationButton.forEach(button => {
+  button.addEventListener('click', () => {
+    calculator.chooseOperation(button.innerText);
+    calculator.updateDisplay();
+  });
+});
+
+equalsButton.addEventListener('click', button => {
+  calculator.compute();
+  calculator.updateDisplay();
 });
